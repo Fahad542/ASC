@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104468090022",
+    "project_id": "asc24-25",
+    "storage_bucket": "asc24-25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104468090022:android:9c9c6e399b81b082b27867",
+        "android_client_info": {
+          "package_name": "com.premier.confrenceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcsKdmgBJ91FrE-KdKtRL2aHDXj7NiRMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
