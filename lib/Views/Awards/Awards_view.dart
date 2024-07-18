@@ -45,61 +45,81 @@ class _AwardsState extends State<Awards> {
                   return Center(child: Text('No Data Available'));
                 }
                 var data = snapshot.data!.data() as Map<String, dynamic>;
+                var visible = data['visiblility']['ischeck'];
+                if (visible == 'true')
+                return
 
-                return Padding(
+    Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
                       CustomAppBar(title: 'Awards'),
                       SizedBox(height: 10),
+
                       Expanded(
-                        child: ListView.builder(
+                        child:
+
+                        ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, index) {
                             String id = data.keys.toList()[index];
                             var awardKey = data.keys.elementAt(index);
                             var awardData = data[awardKey];
 
-                            var nominees=(awardData['nominee'] as Map<String, dynamic>).values.toList();
 
-                            return Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Awardswidget(
-                                    desc: awardData['award_name'],
-                                    imgeAssetPath: awardData['award_image'],
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Polls(nominees: nominees, id: id, title: awardData['award_name'],),
-                                        ),
-                                      );
-                                    },
+                            if (awardData['award_name'] == null) {
+                              return SizedBox.shrink(); // Skip this item if award_name is null
+                            }
 
-                                    address: '', // Add address if needed
-                                    date: '', resultonTap: () {
+                            // Check the visibility condition
 
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Result( nominees: nominees, title: awardData['award_name'],),
-                                      ),
-                                    );
-                                  }, // Add date if needed
+                              var nominees = (awardData['nominee'] != null && awardData['nominee'] is Map<String, dynamic>)
+                                  ? (awardData['nominee'] as Map<String, dynamic>).values.toList()
+                                  : [];
+
+                              return Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: Awardswidget(
+                                      desc: awardData['award_name'] ?? '',
+                                      imgeAssetPath: awardData['award_image'] ?? '',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Polls(nominees: nominees, id: id, title: awardData['award_name'],),
+                                          ),
+                                        );
+                                      },
+                                      address: '', // Add address if needed
+                                      date: '', // Add date if needed
+                                      resultonTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Result(nominees: nominees, title: awardData['award_name'],),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
+                                ],
+                              );
+                            }
 
-                              ],
-                            );
-                          },
                         ),
+
                       ),
 
                     ],
                   ),
                 );
+
+      return
+    Center(
+    child: Text("No Awards Found", style: TextStyle(color: AppColors.yellow, fontSize: 16),),
+    );
               },
             );
           },
