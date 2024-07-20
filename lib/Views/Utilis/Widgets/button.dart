@@ -22,12 +22,12 @@ class _roundbuttonState extends State<roundbutton> {
       onTap: widget.onpress,
       child: Container(
           decoration: BoxDecoration(color: AppColors.yellow,
-              borderRadius: BorderRadius.circular(8)
+              borderRadius: BorderRadius.circular(15)
           ),
           height: 40,
           width: 130,
           child: Center(
-            child: widget.loading ? CircularProgressIndicator(color: Colors.white,): Text(widget.title, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 18),),
+            child: widget.loading ? CircularProgressIndicator(color: Colors.white,): Text(widget.title, style: TextStyle(color: Colors.black,  fontSize: 18),),
           )
       ),
     );

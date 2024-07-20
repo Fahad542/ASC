@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uvento/Views/Collaborations/collaborations_view.dart';
 import 'package:uvento/Views/Feedback/Feedback_view.dart';
 import 'Live_stream/live_stream.dart';
 import 'Location/Location_view.dart';
@@ -79,12 +80,36 @@ class _SplashScreenState extends State<SplashScreen> {
           ? Center(child: CircularProgressIndicator(color: Colors.white,))
           : Stack(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Image.asset(
+                      'assets/loho.png',
+                      height: 90,
+                      width: 120,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
           Container(
             padding: EdgeInsets.symmetric(horizontal: 50),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+
                 Row(
                   children: [
                     if (homepageLogo != null)
@@ -162,10 +187,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 SizedBox(height: 20),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 68),
+                 // margin: EdgeInsets.symmetric(horizontal: 68),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+
                       Expanded(
                         child: custombox(
                             title: 'FEEDBACKS',
@@ -178,9 +204,23 @@ class _SplashScreenState extends State<SplashScreen> {
                             }
                         ),
                       ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: custombox(
+                            title: 'VISIONBOARD',
+                            ontap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => collaboration()),
+                              );
+                            }
+                        ),
+                      ),
                     ],
                   ),
                 ),
+
                 SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

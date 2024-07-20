@@ -84,23 +84,28 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               SizedBox(height: 35),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SplashScreen()),
-                                  );
-                                },
-                                child: Row(
+                             Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
 if(homepageMain.isNotEmpty)
                                     InkWell(
+                                      onTap: (){  Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SplashScreen()),
+                                      );},
                                         child: Image.network(
                                             homepageMain, height: 88)),
+                                    InkWell(
+                                        onTap: (){  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => SplashScreen()),
+                                        );},
+                                        child: Icon(Icons.home, color: AppColors.yellow,size: 28,))
                                   ],
                                 ),
-                              ),
+
 
                               Row(
                                 children: <Widget>[

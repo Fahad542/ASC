@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:uvento/Views/Home/home.dart';
 import '../Attendies/Attendies_view.dart';
 import '../Awards/Awards_view.dart';
+import '../Collaborations/collaboration_list.dart';
 
 
 class Navbar extends StatefulWidget {
@@ -25,6 +26,7 @@ class _NavbarState extends State<Navbar> {
     HomeScreen(),
     Attendies(),
     Awards(),
+    CollabList()
   ];
 
 
@@ -62,8 +64,8 @@ class _NavbarState extends State<Navbar> {
             padding: EdgeInsets.all(14),
             tabs: [
               GButton(
-                icon: Icons.home,
-                text: "Home",
+                icon: Icons.calendar_month,
+                text: "Agenda",
                 iconColor: Colors.white,
                 iconActiveColor: Colors.black,
                 textStyle: TextStyle(
@@ -85,6 +87,16 @@ class _NavbarState extends State<Navbar> {
               GButton(
                 icon:Icons.emoji_events ,
                 text: "Awards",
+                iconColor: Colors.white,
+                iconActiveColor: Colors.black,
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              GButton(
+                icon:Icons.draw ,
+                text: "Vision",
                 iconColor: Colors.white,
                 iconActiveColor: Colors.black,
                 textStyle: TextStyle(
