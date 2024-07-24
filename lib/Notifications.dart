@@ -2,11 +2,33 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'Services.dart';
+import 'models/Notification_model.dart';
+
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+DatabaseHelper _databaseHelper = DatabaseHelper();
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
+
   print("Handling a background message: ${message.messageId}");
   if (message.notification != null) {
     print('Title: ${message.notification!.title}');
     print('Body: ${message.notification!.body}');
+
+    // Convert to Notification_model and save to the database
+    Notification_model notification = Notification_model(
+      title: message.notification!.title,
+      body: message.notification!.body,
+      timestamp: message.sentTime ?? DateTime.now(), // Use sentTime or current time
+    );
+
+    // Access your database helper instance
+
+    await _databaseHelper.insertnotification(notification);
   }
   print('Payload data: ${message.data}');
 }
@@ -14,6 +36,7 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
 class FirebaseApi {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  DatabaseHelper _databaseHelper = DatabaseHelper();
 
   Future<void> initNotification() async {
     await Firebase.initializeApp();
@@ -32,20 +55,36 @@ class FirebaseApi {
     await _firebaseMessaging.subscribeToTopic('general');
     print("Subscribed to topic 'general'");
 
-
+    // Set up message handlers
     FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('Received a message in the foreground: ${message.messageId}');
+
       if (message.notification != null) {
         print('Title: ${message.notification!.title}');
         print('Body: ${message.notification!.body}');
+
+        // Show the local notification
         showLocalNotification(message.notification!);
+
+        // Capture the current time
+        DateTime currentTime = DateTime.now();
+        print('Current Time: $currentTime');
+
+        // Create a notification model
+        Notification_model notification = Notification_model(
+          title: message.notification!.title,
+          body: message.notification!.body,
+          timestamp: message.sentTime ?? currentTime, // Use sentTime or current time
+        );
+
+        // Insert the notification into the database
+        await _databaseHelper.insertnotification(notification);
       }
+
       print('Data: ${message.data}');
     });
-
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Message clicked!');

@@ -1,15 +1,7 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:uvento/Views/Utilis/Utilis.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:uvento/models/Notification_model.dart';
 
 class DatabaseHelper {
   static Database? _database;
@@ -23,7 +15,7 @@ class DatabaseHelper {
 
   Future<Database> initDatabase() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'database.db'),
+      join(await getDatabasesPath(), 'database3.db'),
       onCreate: (db, version) async {
          db.execute(
           'CREATE TABLE votes('
@@ -32,11 +24,16 @@ class DatabaseHelper {
               'participant_token TEXT)',
         );
          db.execute(
-          'CREATE TABLE feedbacks('
-              'code TEXT,'
-              'rating TEXT,'
-              'feedback TEXT)',
+          'CREATE TABLE feedbacks(''code TEXT,''rating TEXT,''feedback TEXT)',
         );
+         db.execute(
+           'CREATE TABLE notification('
+               'Id INTEGER PRIMARY KEY,'
+               'title TEXT,'
+               'body TEXT,'
+               'timestamp TEXT'
+               ')',
+         );
       },
       version: 1,
     );
@@ -114,6 +111,36 @@ class DatabaseHelper {
     print(result);
     return result.isNotEmpty;
   }
+
+
+  Future<void> insertnotification(Notification_model model) async {
+    try {
+      final Database db = await database;
+
+      db.insert('notification', model.toJson());
+      print("insert data sucessfully");
+    }
+    catch(e){
+      throw Exception();
+    }
+}
+
+Future<List<Notification_model>> getnotification() async {
+  try {
+    final Database db = await database;
+  final List<Map<String, dynamic>> list = await db.query('notification');
+  List<Notification_model> model= List.generate(list.length, (i) {
+    return Notification_model.fromJson(list[i]);
+  });
+
+    return model;
+
+  }
+  catch(e){
+    return
+    throw Exception();
+  }
+}
 
 }
 

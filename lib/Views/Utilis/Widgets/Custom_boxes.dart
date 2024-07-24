@@ -16,8 +16,7 @@ class custombox extends StatelessWidget {
       onTap: ontap,
       child: Container(
 
-        height: 60,
-        width: 150,
+
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
             boxShadow: [
