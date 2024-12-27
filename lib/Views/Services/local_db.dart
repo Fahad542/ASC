@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:uvento/models/Notification_model.dart';
+
+import '../../models/Notification_model.dart';
 
 class DatabaseHelper {
   static Database? _database;
@@ -15,7 +16,7 @@ class DatabaseHelper {
 
   Future<Database> initDatabase() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'database3.db'),
+      join(await getDatabasesPath(), 'database7.db'),
       onCreate: (db, version) async {
          db.execute(
           'CREATE TABLE votes('
@@ -31,9 +32,21 @@ class DatabaseHelper {
                'Id INTEGER PRIMARY KEY,'
                'title TEXT,'
                'body TEXT,'
-               'timestamp TEXT'
+               'timestamp TEXT,'
+               'notifications_count INTEGER DEFAULT 0'
                ')',
          );
+         await db.execute(
+             'CREATE TABLE notification_counts('
+                 'id INTEGER PRIMARY KEY,'
+                 'notifications_count INTEGER DEFAULT 0'
+                 ')');
+         await db.execute(
+             'CREATE TABLE attendies('
+                 'id INTEGER PRIMARY KEY,'
+                 'Room_number INTEGER,'
+                 'Name TEXT'
+                 ')');
       },
       version: 1,
     );
@@ -113,34 +126,90 @@ class DatabaseHelper {
   }
 
 
-  Future<void> insertnotification(Notification_model model) async {
+  Future<void> insertNotification(Notification_model model) async {
     try {
       final Database db = await database;
-
-      db.insert('notification', model.toJson());
-      print("insert data sucessfully");
+        await db.insert('notification', model.toJson());
+      print("Inserted data successfully");
+    } catch (e) {
+      print("Failed to insert data: $e");
+      throw Exception("Failed to insert notification into database");
     }
-    catch(e){
-      throw Exception();
-    }
-}
+  }
 
-Future<List<Notification_model>> getnotification() async {
+
+
+
+
+
+  Future<List<Notification_model>> getnotification() async {
+    try {
+      final Database db = await database;
+      final List<Map<String, dynamic>> list = await db.query('notification');
+
+      List<Notification_model> model = list.map((e) => Notification_model.fromJson(e)).toList();
+
+      return model;
+    } catch (e) {
+      print("Failed to retrieve notifications: $e");
+      throw Exception("Failed to retrieve notifications from database");
+    }
+  }
+  Future<int> getNotificationCount() async {
+    final Database db = await database;
+    int count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM notification_counts')) ?? 0;
+    return count;
+  }
+
+  Future<void> updateNotificationCount() async {
+    final Database db = await database;
+    await db.delete('notification_counts');
+  }
+  Future<void> insertNotificationCount(int count) async {
+    final Database db = await database;
+    await db.insert(
+      'notification_counts',
+      {'notifications_count': count},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+
+  Future<void> attendiesinsert(String roomNumber, String name) async {
+    try {
+      final Database db = await database;
+      await db.insert('attendies',  {'Room_number': roomNumber, 'Name': name});
+    } catch (e) {
+      print("Failed to insert data: $e");
+      throw Exception("Failed to insert notification into database");
+    }
+  }
+Future<List<String>> getnames(String room, String name) async {
   try {
     final Database db = await database;
-  final List<Map<String, dynamic>> list = await db.query('notification');
-  List<Notification_model> model= List.generate(list.length, (i) {
-    return Notification_model.fromJson(list[i]);
-  });
+     final List<Map<String, dynamic>> map= await db.query('attendies' , columns: ['Name'], where: 'Room_number =?',
+     whereArgs: [room]);
+     List<String> names=[];
+     for(var item in map){
+       names.add(item['Name']);
+     }
+     if(name!=null) {
+       names.remove(name);
+     }
+     return names;
 
-    return model;
+  } catch (e) {
 
+    throw Exception("Failed to insert notification into database");
   }
-  catch(e){
-    return
-    throw Exception();
-  }
+
 }
+
+
+
+
+
 
 }
 

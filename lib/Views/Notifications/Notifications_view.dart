@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uvento/Views/Utilis/App_colors.dart';
 import 'package:uvento/models/Notification_model.dart';
-import '../../Services.dart';
+import '../Services/local_db.dart';
 
 
 class notifications extends StatefulWidget {
@@ -33,7 +33,7 @@ class _NotificationsState extends State<notifications> {
         print('data: $data');
       });
     } catch (e) {
-      // Handle error
+
       print('Error fetching data: $e');
     }
   }
@@ -53,17 +53,26 @@ class _NotificationsState extends State<notifications> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Padding(
+      body:
+
+      Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
+        child:
+        data.isEmpty
+            ? Center(child: Text("No Notifications Found!", style: TextStyle(color: AppColors.yellow)))
+            :
+        ListView.builder(
           itemCount: data.length,
-physics: BouncingScrollPhysics(),
+            physics: BouncingScrollPhysics(),
           itemBuilder: (BuildContext context, index) {
             Notification_model noti = data[index];
             String formattedDate = DateFormat.yMMMd().format(noti.timestamp!); // E.g., 'Jul 23, 2024'
             String formattedTime = DateFormat.jm().format(noti.timestamp!);
 
-            return Padding(
+            return
+
+
+              Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: GestureDetector(
                 onTap: () => _toggleExpand(index), // Toggle expansion on tap

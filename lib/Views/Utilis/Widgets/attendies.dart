@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:uvento/Views/Polls/Polls_view.dart';
-
 import '../App_colors.dart';
 
 class Attendieswidget extends StatelessWidget {
@@ -10,8 +8,8 @@ class Attendieswidget extends StatelessWidget {
   String name;
   String tablenumber;
   String imgeAssetPath;
- final VoidCallback ontap;
-  /// later can be changed with imgUrl
+  final VoidCallback ontap;
+
   Attendieswidget({required this.desc, required this.name, required this.tablenumber, required this.imgeAssetPath,
     required this.ontap
   });

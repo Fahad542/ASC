@@ -16,7 +16,7 @@ class custombox extends StatelessWidget {
       onTap: ontap,
       child: Container(
 
-
+       width: 140,
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
             boxShadow: [
@@ -30,7 +30,7 @@ class custombox extends StatelessWidget {
             borderRadius: BorderRadius.circular(24), color: AppColors.yellow),
         child: Center(child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15
+          child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13
           ),),
         )),
       ),

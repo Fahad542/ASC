@@ -1,6 +1,7 @@
 class Appurl{
 static var baseurl="https://premierspulse.com/asc";
 static var Attendeesurl=baseurl+"/attendees.php";
+static var Comitteeurl=baseurl+"/comittee.php";
 static var loginurl=baseurl+"/api/login";
 static var registerurl=baseurl+"/api/register";
 static var userlist=baseurl+"/api/users?page=2";

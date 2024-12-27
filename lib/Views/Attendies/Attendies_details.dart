@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../Services/local_db.dart';
 import '../Utilis/App_colors.dart';
+import '../Utilis/Widgets/container.dart';
 
 class Attendies_detail extends StatefulWidget {
   final String imgeAssetPath;
   final String name;
   final String decs;
-  final int room_no;
-  final int table_no;
+   var room_no;
+   var  table_no;
   final String number;
   final String branch;
   final String hotel_name;
-  const Attendies_detail({super.key, required this.imgeAssetPath, required this.name, required this.decs, required this.room_no, required this.table_no, required this.number, required this.hotel_name, required this.branch});
+   Attendies_detail({super.key, required this.imgeAssetPath, required this.name, required this.decs, required this.room_no, required this.table_no, required this.number, required this.hotel_name, required this.branch});
 
   @override
   State<Attendies_detail> createState() => _Attendies_detailState();
@@ -23,6 +25,7 @@ class Attendies_detail extends StatefulWidget {
 
 class _Attendies_detailState extends State<Attendies_detail> {
   @override
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
   Future<void> _makePhoneCall(String phoneNumber) async {
     var status = await Permission.phone.status;
     if (status.isDenied) {
@@ -45,6 +48,109 @@ class _Attendies_detailState extends State<Attendies_detail> {
       print('Phone permission denied');
     }
   }
+  Future<void> showNamesDialog(BuildContext context, String roomNumber, String name) async {
+    try {
+      // Fetch names from the database
+      List<String> names = await _databaseHelper.getnames(roomNumber, name); // Replace with your actual database method
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0), // Adjust border radius here
+            ),
+            child: Container(
+              decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(8)),
+              padding: EdgeInsets.all(16.0), // Adjust padding as needed
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Ensures the dialog takes up only as much space as needed
+                children: <Widget>[
+                  Text(
+                    'Room Memebers',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      color: AppColors.yellow
+                    ),
+                  ),
+                  SizedBox(height: 12.0), // Adjust spacing between title and content
+                  names.isEmpty
+                      ? Text('No members found.' , style: TextStyle(color: AppColors.yellow),)
+                      : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: names.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(names[index], style: TextStyle(color: AppColors.whiteColor),),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12.0), // Adjust spacing before the button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      TextButton(
+                        child: Text('Close', style: TextStyle(color: AppColors.yellow),),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      print("Failed to retrieve names: $e");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(13.0), // Adjust border radius here
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16.0), // Adjust padding as needed
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    'Error',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  SizedBox(height: 12.0), // Adjust spacing between title and content
+                  Text('Failed to retrieve names from database.'),
+                  SizedBox(height: 12.0), // Adjust spacing before the button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      TextButton(
+                        child: Text('Close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+
   Widget build(BuildContext context) {
     return Scaffold(
 
@@ -165,9 +271,30 @@ backgroundColor: Colors.transparent,
                   ),
                   SizedBox(height: 8),
 
-                  Text("         ${widget.room_no.toString()}"
-                    ,
-                    style: TextStyle(fontSize: 16, color: AppColors.whiteColor),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("         ${widget.room_no.toString()}"
+                        ,
+                        style: TextStyle(fontSize: 16, color: AppColors.whiteColor),
+                      ),
+                      // InkWell(
+                      //   onTap: (){
+                      //
+                      //     showNamesDialog(context,widget.room_no, widget.name);
+                      //   },
+                      //   child: Container(
+                      //     padding: EdgeInsets.all(8),
+                      //
+                      //     decoration: BoxDecoration(color: AppColors.yellow, borderRadius: BorderRadius.circular(8)),
+                      //
+                      //     child: Text('See Memebers', style: TextStyle(color: AppColors.primaryColor, fontSize: 9, fontWeight: FontWeight.bold),),),
+                      // ),
+        if (widget.room_no != "0" && RegExp(r'^[0-9]+$').hasMatch(widget.room_no))
+
+                      containerwidget(title: "Room Mates", color: AppColors.yellow, ontap:(){showNamesDialog(context,widget.room_no.toString(), widget.name);}, Textcolor: AppColors.primaryColor,)
+
+                    ],
                   ),
 
 

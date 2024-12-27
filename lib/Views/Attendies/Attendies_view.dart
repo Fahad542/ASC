@@ -80,12 +80,12 @@ class _speakersState extends State<Attendies> {
                     return Container(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Attendieswidget(
-                        desc: data.memberDesignation, name: data.memberName, tablenumber: data.tableNo.toString(), imgeAssetPath:data.image, ontap: () {
+                        desc: data.memberDesignation, name: data.memberName, tablenumber: data.tableNo, imgeAssetPath:data.image, ontap: () {
                           print("object");
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Attendies_detail(imgeAssetPath: data.image, name:  data.memberName, decs: data.memberDesignation, room_no: data.roomNo, table_no: data.tableNo, number: data.mobile, hotel_name: data.hotel_of_stay, branch: data.branch,)
+                              builder: (context) => Attendies_detail(imgeAssetPath: data.image, name:  data.memberName, decs: data.memberDesignation, room_no: data.roomNo.toString(), table_no: data.tableNo, number: data.mobile, hotel_name: data.hotel_of_stay, branch: data.branch,)
 
                             ),
                           );},

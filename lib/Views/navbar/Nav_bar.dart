@@ -70,18 +70,18 @@ class _NavbarState extends State<Navbar> {
                 iconActiveColor: Colors.black,
                 textStyle: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.bold,
+
                 ),
               ),
 
               GButton(
                 icon: Icons.person,
-                text: "Attendies",
+                text: "Attendees",
                 iconColor: Colors.white,
                 iconActiveColor: Colors.black,
                 textStyle: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.bold,
+
                 ),
               ),
               GButton(
@@ -91,7 +91,7 @@ class _NavbarState extends State<Navbar> {
                 iconActiveColor: Colors.black,
                 textStyle: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.bold,
+
                 ),
               ),
               GButton(
@@ -101,7 +101,7 @@ class _NavbarState extends State<Navbar> {
                 iconActiveColor: Colors.black,
                 textStyle: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.bold,
+
                 ),
               ),
             ],

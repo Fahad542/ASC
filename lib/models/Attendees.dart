@@ -1,8 +1,8 @@
 class Member {
   final String memberDesignation;
   final String memberName;
-  final int tableNo;
-  final int roomNo;
+   String tableNo;
+   String roomNo;
   final String image;
   final String hotel_of_stay;
   final String mobile;
@@ -26,10 +26,9 @@ class Member {
     return Member(
       memberDesignation: json['member_designation'],
       memberName: json['member_name'],
-      tableNo: json['table_no'],
+      tableNo: json['table_no'].toString(),
         image:json['image'],
-
-      roomNo: json['room_no'] ?? '',
+      roomNo: json['room_no'].toString() ,
         hotel_of_stay:json['hotel_of_stay'] ?? '',
         mobile:json['mobile'] ?? '',
         branch:json['branch'] ?? '', member_code: json['member_code'],

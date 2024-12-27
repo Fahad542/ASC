@@ -1,22 +1,23 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:uvento/Notifications.dart';
-import 'package:uvento/Views/Utilis/App_colors.dart';
-import 'Views/Splash_screen.dart';
-import 'Views/Utilis/Widgets/Connectivity.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'Views/Services/Push_notifications.dart';
+import 'Views/Utilis/App_colors.dart';
 import 'Views/splash.dart';
+
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(); // Initialize Firebase
+  await Permission.storage.request();
    await FirebaseApi().initNotification();
+
   runApp(
     MyApp(),
-
   );
 }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
 
 
       ),
-      home: SplashScreen(),
+      home: Splash(),
     );
   }
 }

@@ -43,20 +43,38 @@ class Awardswidget extends StatelessWidget {
                   children: <Widget>[
 
                     Row(
+
                       children: [
+
+
                        Expanded(child:  Text(desc, style: TextStyle(
 
                             color: Colors.white,
                             fontSize: 15,
                           fontWeight: FontWeight.w500
                         ),),),
-                        InkWell(
-                          onTap: onTap,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon( Icons.arrow_forward, color: AppColors.yellow, size: 17),
-                          ),
-                        ),
+                        // InkWell(
+                        //   onTap: onTap,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     child: Container(child: Text('Vote'),)
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(right: 5),
+                        //   child: InkWell(
+                        //     onTap: onTap,
+                        //     child: Container(
+                        //       padding: EdgeInsets.all(4),
+                        //       decoration: BoxDecoration(color: AppColors.yellow, borderRadius: BorderRadius.circular(8),
+                        //
+                        //       )
+                        //
+                        //       ,
+                        //       child: Text('VOTE', style: TextStyle(color: AppColors.primaryColor, fontSize: 10, fontWeight: FontWeight.bold),),),
+                        //   ),
+                        // ),
+
                       ],
                     ),
                     SizedBox(height: 8,),
@@ -83,7 +101,8 @@ class Awardswidget extends StatelessWidget {
                               fontSize: 10
                           ),),
                           Spacer(),
-               containerwidget(title: "Result", color: Colors.green, ontap:resultonTap,)
+                          containerwidget(title: "VOTE", color: AppColors.yellow, ontap:onTap, Textcolor: AppColors.primaryColor,)
+              // containerwidget(title: "Result", color: Colors.green, ontap:resultonTap,)
 
                         ],
                       ),

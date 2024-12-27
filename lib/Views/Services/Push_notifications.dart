@@ -2,60 +2,68 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'Services.dart';
-import 'models/Notification_model.dart';
-
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+
+import 'local_db.dart';
+import '../../models/Notification_model.dart';
+import '../Notifications/Notifications_view.dart';
 DatabaseHelper _databaseHelper = DatabaseHelper();
+
+@pragma('vm:entry-point')
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
+  try {
+    print("Handling a background message: ${message.messageId}");
 
-  print("Handling a background message: ${message.messageId}");
-  if (message.notification != null) {
-    print('Title: ${message.notification!.title}');
-    print('Body: ${message.notification!.body}');
+    if (message.notification != null) {
+      print('Notification Title: ${message.notification!.title}');
+      print('Notification Body: ${message.notification!.body}');
 
-    // Convert to Notification_model and save to the database
-    Notification_model notification = Notification_model(
-      title: message.notification!.title,
-      body: message.notification!.body,
-      timestamp: message.sentTime ?? DateTime.now(), // Use sentTime or current time
-    );
+      Notification_model notification = Notification_model(
+        title: message.notification!.title,
+        body: message.notification!.body,
+        timestamp: message.sentTime ?? DateTime.now(),  // Use sentTime or current time
+      );
 
-    // Access your database helper instance
+      // Access your database helper instance
+      await _databaseHelper.insertNotificationCount(1);
+      await _databaseHelper.insertNotification(notification);
 
-    await _databaseHelper.insertnotification(notification);
+    }
+
+    print('Payload data: ${message.data}');
+  } catch (e) {
+    print('Error handling background message: $e');
+    // Handle the exception as needed, such as logging it or reporting it.
   }
-  print('Payload data: ${message.data}');
 }
+
 
 class FirebaseApi {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   DatabaseHelper _databaseHelper = DatabaseHelper();
 
-  Future<void> initNotification() async {
+  Future<void> initNotification({BuildContext? context}) async {
     await Firebase.initializeApp();
 
-    // Initialize local notifications
+
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
     final InitializationSettings initializationSettings =
     InitializationSettings(android: initializationSettingsAndroid);
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    // Request permission
+
     await _firebaseMessaging.requestPermission();
 
-    // Get FCM token
+
     await _firebaseMessaging.subscribeToTopic('general');
+    String? token = await _firebaseMessaging.getToken();
+
+    print("FCM Token: $token");
     print("Subscribed to topic 'general'");
 
-    // Set up message handlers
+
     FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -80,7 +88,9 @@ class FirebaseApi {
         );
 
         // Insert the notification into the database
-        await _databaseHelper.insertnotification(notification);
+        await _databaseHelper.insertNotificationCount(1);
+        await _databaseHelper.insertNotification(notification);
+
       }
 
       print('Data: ${message.data}');
@@ -88,12 +98,18 @@ class FirebaseApi {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Message clicked!');
-      if (message.notification != null) {
+      if (message.notification!.body != null ) {
         print('Title: ${message.notification!.title}');
         print('Body: ${message.notification!.body}');
+        Navigator.push(
+          context!,
+          MaterialPageRoute(builder: (context) => notifications()),
+        );
+       
       }
       print('Data: ${message.data}');
     });
+
   }
 
   void showLocalNotification(RemoteNotification notification) async {

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class containerwidget extends StatefulWidget {
   final String title ;
   final Color color;
+  final Color Textcolor;
    final VoidCallback? ontap;
-  const containerwidget({super.key, required this.title, required this.color, this.ontap});
+  const containerwidget({super.key, required this.title, required this.color, this.ontap , required  this.Textcolor});
 
 
   @override
@@ -26,7 +27,7 @@ class _containerState extends State<containerwidget> {
         ),
         child:Padding(padding: EdgeInsets.all(8),
         child: Text(widget.title,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+        style: TextStyle(color: widget.Textcolor, fontWeight: FontWeight.bold, fontSize: 12),
         ),
       )),
     );

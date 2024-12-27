@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return nodata();
                       }
                       var data = snapshot.data!.data() as Map<String, dynamic>;
-
+        List<String> sortlist=data.keys.toList()..sort((a,b)=> a.compareTo(b));
 
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 25),
@@ -138,11 +138,13 @@ if(homepageMain.isNotEmpty)
                                 height: 55,
 
                                 child: ListView.builder(
-                                  itemCount: data.length,
+                                  itemCount: sortlist.length,
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
-                                    String id = data.keys.toList()[index];
+
+                                    String id = sortlist[index];
+
                                     List<String> parts=id.split('-');
                                     String day = parts[0];
                                     String month = parts[1];
@@ -166,6 +168,7 @@ if(homepageMain.isNotEmpty)
                                 fontSize: 20,
                               )),
                               // SizedBox(height: 16),
+
                               Expanded(
                                 child: ListView.builder(
                                   physics: BouncingScrollPhysics(),
@@ -174,21 +177,32 @@ if(homepageMain.isNotEmpty)
                                   itemBuilder: (context, index) {
                                     var sessions = data[model.selecteddate] as Map<String, dynamic>;
 
-                                    // var conference = conferenceData[index].values.toList()[index];
-                                    return
+                                    // Convert the sessions map to a list of entries
+                                    var sessionEntries = sessions.entries.toList();
 
-                                      Column(
-                                        children: sessions.entries.map((entry) {
-                                          var session = entry.value as Map<
-                                              String,
-                                              dynamic>;
-                                          return PopularEventTile(
-                                              conference: session);
-                                        }).toList(),
-                                      );
+                                    // Assuming the keys are numeric strings and need to be sorted as integers
+                                    sessionEntries.sort((a,b) {
+                                      var keyA = int.tryParse(a.key) ?? 0;
+                                      var keyB = int.tryParse(b.key) ?? 0;
+                                      return keyA.compareTo(keyB);
+                                    });
+
+                                    // Print sorted session keys for debugging
+                                    for (var entry in sessionEntries) {
+                                      print('Sorted Session ${entry.key}');
+                                    }
+
+                                    return Column(
+                                      children: sessionEntries.map((entry) {
+                                        var session = entry.value as Map<String, dynamic>;
+                                        return PopularEventTile(conference: session);
+                                      }).toList(),
+                                    );
                                   },
                                 ),
                               )
+
+
                             ]
                         ),
                       );
@@ -324,9 +338,9 @@ class PopularEventTile extends StatelessWidget {
 
                         children: <Widget> [
 
-                          containerwidget(title: 'Conference Hall', color: Colors.purple),
+                          containerwidget(title: 'Conference Hall', color: Colors.purple, Textcolor: Colors.white,),
                           SizedBox(width: 8),
-                          containerwidget(title: 'MEMBER ACCESS', color: Colors.green),
+                          containerwidget(title: 'MEMBER ACCESS', color: Colors.green, Textcolor: Colors.white,),
                           Spacer(),
                           if(conference['live']=='true')
                             Row(children:[ Lottie.asset('assets/Animation - 1720071333989.json'),

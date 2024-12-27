@@ -3,12 +3,14 @@ import 'package:uvento/Data/response/api_response.dart';
 import 'package:uvento/Repository/Attendees_repository.dart';
 import 'package:uvento/models/Attendees.dart';
 
+import '../../Repository/Comittee_repository.dart';
 import '../../Repository/Feedback_repository.dart';
+import '../../models/Comittee_model.dart';
 import '../Services/local_db.dart';
 
-class Attendies_view_model with ChangeNotifier
+class Comittee_view_model with ChangeNotifier
 {
-  final repo = attendies_repository();
+  final repo = Comittee_repository();
   final repo1 = feedback_repository();
   DatabaseHelper _databaseHelper = DatabaseHelper();
   String searchquery='';
@@ -17,8 +19,8 @@ class Attendies_view_model with ChangeNotifier
     searchquery=query;
     notifyListeners();
   }
-  ApiResponse<MemberList>list =ApiResponse.loading();
-  void setlist(ApiResponse<MemberList> data){
+  ApiResponse<CommitteeData>list =ApiResponse.loading();
+  void setlist(ApiResponse<CommitteeData> data){
     list=data;
     notifyListeners();
   }
@@ -28,19 +30,16 @@ class Attendies_view_model with ChangeNotifier
       setlist(ApiResponse.loading());
       final value =await repo.userlist();
       setlist(ApiResponse.complete(value));
-     for(var item in list.data!.datalist) {
-       await _databaseHelper.attendiesinsert(item.roomNo, item.memberName);
-     }
+
 
     }
     catch(e){
-
       setlist(ApiResponse.error(e.toString()));
     }
   }
-  List<Member> get filterlist {
+  List<CommitteeMember> get filterlist {
     if(searchquery.isEmpty){
-      return list.data?.datalist ?? [];
+      return list.data!.datalist ??[];
     }
     else {
       return list.data!.datalist.where((element) => element.memberName.toLowerCase().contains(searchquery)).toList();

@@ -45,7 +45,7 @@ class _AwardsState extends State<Awards> {
                   return Center(child: Text('No Data Available'));
                 }
                 var data = snapshot.data!.data() as Map<String, dynamic>;
-                var visible = data['visiblility']['ischeck'];
+                var visible = data['visiblility']['ischeck'] ;
                 if (visible == 'true')
                 return
 
